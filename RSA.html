@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple RSA</title>
+  <script>
+    const e = 7;
+    const d = 103;
+    const n = 143;
+
+    function modPow(base, exp, mod) {
+      let result = 1;
+      base = base % mod;
+      while (exp > 0) {
+        if (exp % 2 === 1) result = (result * base) % mod;
+        exp = Math.floor(exp / 2);
+        base = (base * base) % mod;
+      }
+      return result;
+    }
+
+    function encrypt() {
+      const msg = document.getElementById("msg").value;
+      let encrypted = "";
+      for (let i = 0; i < msg.length; i++) {
+        const m = msg.charCodeAt(i);
+        encrypted += modPow(m, e, n) + " ";
+      }
+      document.getElementById("output").innerText = encrypted.trim();
+    }
+
+    function decrypt() {
+      const encrypted = document.getElementById("output").innerText.split(" ");
+      let decrypted = "";
+      for (let i = 0; i < encrypted.length; i++) {
+        const c = parseInt(encrypted[i]);
+        decrypted += String.fromCharCode(modPow(c, d, n));
+      }
+      document.getElementById("decrypted").innerText = decrypted;
+    }
+  </script>
+</head>
+<body>
+  <h2>Simple RSA (Demo Only)</h2>
+  <input type="text" id="msg" placeholder="Enter text" />
+  <button onclick="encrypt()">Encrypt</button>
+  <p><b>Encrypted:</b> <span id="output"></span></p>
+  <button onclick="decrypt()">Decrypt</button>
+  <p><b>Decrypted:</b> <span id="decrypted"></span></p>
+</body>
+</html>
